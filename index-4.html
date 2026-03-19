@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Álvaro Zambianchi — Web Bug Fixer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07080d;
+  --bg2:#0d0e16;
+  --bg3:#13141f;
+  --border:rgba(255,255,255,.07);
+  --text:#e8e8f2;
+  --dim:rgba(232,232,242,.45);
+  --green:#00e87a;
+  --red:#ff3355;
+  --yellow:#ffcc00;
+  --blue:#4d9fff;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(7,8,13,.95);border-color:var(--border);backdrop-filter:blur(16px);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:.8rem;color:rgba(255,255,255,.4);letter-spacing:.12em;}
+.nav-cta{font-family:'Space Mono',monospace;font-size:.65rem;padding:.45rem 1.1rem;background:var(--green);color:#000;border:none;border-radius:4px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;font-weight:700;text-decoration:none;transition:all .2s;}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,232,122,.3);}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;opacity:.5;}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,122,.07) 0%,transparent 65%);top:-100px;right:-150px;pointer-events:none;animation:glowPulse 5s ease-in-out infinite;}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.1);opacity:1}}
+
+.hero-tag{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem;}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--green);}
+.hero-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero-h1{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,8vw,6rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:#fff;margin-bottom:1.5rem;}
+.hero-h1 .accent{color:var(--green);}
+.hero-h1 .strike{position:relative;color:rgba(255,255,255,.25);}
+.hero-h1 .strike::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:var(--red);transform:rotate(-2deg);}
+
+.hero-sub{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--dim);max-width:500px;line-height:1.7;margin-bottom:2.5rem;}
+.hero-sub strong{color:var(--text);font-weight:500;}
+
+.hero-pills{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:3rem;}
+.pill{font-family:'Space Mono',monospace;font-size:.62rem;padding:.3rem .8rem;border-radius:20px;letter-spacing:.06em;}
+.pill.g{background:rgba(0,232,122,.1);border:1px solid rgba(0,232,122,.25);color:var(--green);}
+.pill.w{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);}
+
+.hero-btns{display:flex;gap:.875rem;flex-wrap:wrap;}
+.btn-main{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;padding:.875rem 2rem;background:var(--green);color:#000;border:none;border-radius:5px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .25s;}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,232,122,.35);}
+.btn-ghost{font-family:'Space Mono',monospace;font-size:.72rem;padding:.875rem 2rem;background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);border-radius:5px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .25s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.3);color:#fff;}
+
+.hero-stats{display:flex;gap:2.5rem;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#fff;}
+.stat-lbl{font-size:.72rem;color:var(--dim);margin-top:.1rem;}
+
+/* ── SECTION BASE ── */
+.section{padding:6rem 2rem;border-top:1px solid var(--border);}
+.sec-tag{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:.16em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.sec-tag::before{content:'';width:18px;height:1px;background:var(--green);}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:1rem;}
+.sec-sub{font-size:.95rem;color:var(--dim);max-width:480px;line-height:1.7;margin-bottom:3rem;}
+
+/* ── WHAT I FIX ── */
+.fix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.fix-card{background:var(--bg2);padding:1.75rem;transition:background .2s;}
+.fix-card:hover{background:var(--bg3);}
+.fix-icon{font-size:1.6rem;margin-bottom:1rem;display:block;}
+.fix-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.fix-desc{font-size:.82rem;color:var(--dim);line-height:1.65;}
+.fix-examples{margin-top:1rem;display:flex;flex-direction:column;gap:.3rem;}
+.fix-ex{font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.3);padding:.2rem 0;border-top:1px solid rgba(255,255,255,.04);letter-spacing:.04em;}
+.fix-ex.solved{color:var(--green);}
+.fix-ex.solved::before{content:'✓ ';}
+.fix-ex.broken{color:rgba(255,51,85,.5);}
+.fix-ex.broken::before{content:'✗ ';}
+
+/* ── BEFORE / AFTER ── */
+.ba-list{display:flex;flex-direction:column;gap:1.25rem;}
+.ba-item{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg2);}
+.ba-header{display:flex;align-items:center;gap:.875rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.ba-num{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.1em;}
+.ba-title{font-size:.9rem;font-weight:500;color:#fff;}
+.ba-type{margin-left:auto;font-family:'Space Mono',monospace;font-size:.58rem;padding:.15rem .5rem;border-radius:3px;letter-spacing:.06em;}
+.ba-type.html{background:rgba(255,51,85,.12);color:#ff3355;}
+.ba-type.css{background:rgba(77,159,255,.12);color:#4d9fff;}
+.ba-type.js{background:rgba(255,204,0,.12);color:#ffcc00;}
+.ba-body{display:grid;grid-template-columns:1fr 1fr;}
+.ba-side{padding:1.25rem;}
+.ba-side.before{border-right:1px solid var(--border);}
+.ba-label{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;}
+.ba-label.b{color:rgba(255,51,85,.7);}
+.ba-label.b::before{content:'✗';font-size:.7rem;}
+.ba-label.a{color:var(--green);}
+.ba-label.a::before{content:'✓';font-size:.7rem;}
+.ba-code{font-family:'Space Mono',monospace;font-size:.62rem;line-height:1.7;color:rgba(255,255,255,.35);background:rgba(0,0,0,.3);border-radius:6px;padding:.75rem;white-space:pre-wrap;word-break:break-all;}
+.ba-code.after{color:rgba(0,232,122,.7);}
+.ba-explain{padding:.875rem 1.25rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--dim);line-height:1.6;background:rgba(0,232,122,.03);}
+.ba-explain strong{color:var(--green);font-weight:500;}
+
+/* ── PROJECTS ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;}
+.proj-card{border:1px solid var(--border);border-radius:10px;padding:1.75rem;background:var(--bg2);transition:all .25s;position:relative;overflow:hidden;}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .25s;}
+.proj-card:hover{transform:translateY(-4px);border-color:rgba(0,232,122,.2);box-shadow:0 16px 48px rgba(0,0,0,.4);}
+.proj-card:hover::before{opacity:1;background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.proj-num{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--dim);margin-bottom:1rem;letter-spacing:.1em;}
+.proj-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.proj-desc{font-size:.82rem;color:var(--dim);line-height:1.65;margin-bottom:1.25rem;}
+.proj-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+.proj-tag{font-family:'Space Mono',monospace;font-size:.57rem;padding:.15rem .45rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);border-radius:3px;}
+.proj-link{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--green);text-decoration:none;letter-spacing:.08em;display:flex;align-items:center;gap:.3rem;transition:gap .2s;}
+.proj-link:hover{gap:.6rem;}
+
+/* ── TRUST ── */
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.trust-item{background:var(--bg2);padding:1.75rem;text-align:center;}
+.trust-icon{font-size:1.75rem;margin-bottom:.875rem;display:block;}
+.trust-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
+.trust-desc{font-size:.78rem;color:var(--dim);line-height:1.6;}
+
+/* ── SKILLS ── */
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.skill-item{display:flex;align-items:center;gap:1rem;padding:.875rem 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.skill-name{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.08em;width:100px;flex-shrink:0;}
+.skill-bar{flex:1;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--green),rgba(0,232,122,.3));border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.22,1,.36,1);}
+.skill-fill.visible{transform:scaleX(1);}
+.skill-pct{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.2);width:30px;text-align:right;}
+
+/* ── CONTACT ── */
+#contact{text-align:center;padding:8rem 2rem;}
+.contact-eyebrow{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.25rem;}
+.contact-h{font-family:'Syne',sans-serif;font-size:clamp(2rem,6vw,4.5rem);font-weight:800;color:#fff;line-height:1.05;margin-bottom:1.25rem;}
+.contact-h .accent{color:var(--green);}
+.contact-sub{font-size:.95rem;color:var(--dim);max-width:400px;margin:0 auto 2.5rem;line-height:1.7;}
+.contact-btns{display:flex;gap:.875rem;justify-content:center;flex-wrap:wrap;}
+
+/* ── FOOTER ── */
+footer{padding:1.5rem 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.footer-copy{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.15);letter-spacing:.08em;}
+.footer-by{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.1);}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  nav{padding:.875rem 1.25rem;}
+  #hero,.section{padding-left:1.25rem;padding-right:1.25rem;}
+  .hero-stats{gap:1.5rem;}
+  .ba-body{grid-template-columns:1fr;}
+  .ba-side.before{border-right:none;border-bottom:1px solid var(--border);}
+  .skills-wrap{grid-template-columns:1fr;}
+  #contact{padding:5rem 1.25rem;}
+  footer{flex-direction:column;gap:.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="nav-logo">ÁZ · DEV</span>
+  <a href="https://www.fiverr.com" target="_blank" class="nav-cta">Hire me on Fiverr ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-tag">
+    <span class="dot"></span>
+    Available for work
+  </div>
+
+  <h1 class="hero-h1">
+    If your web<br>
+    is <span class="strike">broken</span>,<br>
+    I <span class="accent">fix it.</span>
+  </h1>
+
+  <p class="hero-sub">
+    I specialize in <strong>HTML, CSS & JavaScript bug fixing</strong>.
+    Broken layouts, scripts that fail, responsive issues —
+    I find the problem and solve it fast.
+  </p>
+
+  <div class="hero-pills">
+    <span class="pill g">✓ Quick delivery</span>
+    <span class="pill g">✓ Clean code</span>
+    <span class="pill g">✓ Responsive fixes</span>
+    <span class="pill w">HTML · CSS · JavaScript</span>
+  </div>
+
+  <div class="hero-btns">
+    <a href="https://www.fiverr.com" target="_blank" class="btn-main">⚡ Hire me on Fiverr</a>
+    <a href="#bugs" class="btn-ghost">See bugs I fixed ↓</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">HTML</div>
+      <div class="stat-lbl">Structure & Semantics</div>
+    </div>
+    <div>
+      <div class="stat-num">CSS</div>
+      <div class="stat-lbl">Layout & Responsive</div>
+    </div>
+    <div>
+      <div class="stat-num">JS</div>
+      <div class="stat-lbl">Logic & Interactions</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT I FIX -->
+<section class="section" id="services">
+  <div class="sec-tag">What I do</div>
+  <h2 class="sec-title">I fix what's<br>breaking your site</h2>
+  <p class="sec-sub">Not just pretty pages — real solutions to real problems. Send me your broken code, I'll send it back working.</p>
+
+  <div class="fix-grid">
+    <div class="fix-card">
+      <span class="fix-icon">🔴</span>
+      <div class="fix-title">HTML Errors</div>
+      <div class="fix-desc">Unclosed tags, broken structure, invalid nesting, missing attributes, accessibility issues.</div>
+      <div class="fix-examples">
+        <div class="fix-ex broken">Unclosed &lt;div&gt; breaking layout</div>
+        <div class="fix-ex broken">Missing alt on images</div>
+        <div class="fix-ex broken">Wrong tag nesting</div>
+        <div class="fix-ex solved">Structure fixed & validated</div>
+      </div>
+    </div>
+    <div class="fix-card">
+      <span class="fix-icon">🟡</span>
+      <div class="fix-title">CSS Issues</div>
+      <div class="fix-desc">Broken layouts, elements out of place, not responsive on mobile, overlapping content.</div>
+      <div class="fix-examples">
+        <div class="fix-ex broken">Mobile layout completely broken</div>
+        <div class="fix-ex broken">Elements overlapping each other</div>
+        <div class="fix-ex broken">Flexbox/Grid not working</div>
+        <div class="fix-ex solved">Responsive & pixel-perfect</div>
+      </div>
+    </div>
+    <div class="fix-card">
+      <span class="fix-icon">🟠</span>
+      <div class="fix-title">JavaScript Bugs</div>
+      <div class="fix-desc">Buttons that don't work, forms that don't submit, scripts that throw errors in console.</div>
+      <div class="fix-examples">
+        <div class="fix-ex broken">Button click does nothing</div>
+        <div class="fix-ex broken">Form not submitting</div>
+        <div class="fix-ex broken">Console full of errors</div>
+        <div class="fix-ex solved">Logic fixed & tested</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="section" id="bugs">
+  <div class="sec-tag">Before / After</div>
+  <h2 class="sec-title">Real bugs.<br>Real fixes.</h2>
+  <p class="sec-sub">This is what I actually do. Not demos — actual problems I debug and solve.</p>
+
+  <div class="ba-list">
+
+    <div class="ba-item">
+      <div class="ba-header">
+        <span class="ba-num">01</span>
+        <span class="ba-title">Unclosed tags breaking entire page layout</span>
+        <span class="ba-type html">HTML</span>
+      </div>
+      <div class="ba-body">
+        <div class="ba-side before">
+          <div class="ba-label b">Before</div>
+          <div class="ba-code">&lt;div class="card"&gt;
+  &lt;h2&gt;Title&lt;/h2&gt;
+  &lt;p&gt;Some text
+&lt;div class="footer"&gt;
+  ...
+&lt;/div&gt;</div>
+        </div>
+        <div class="ba-side">
+          <div class="ba-label a">After</div>
+          <div class="ba-code after">&lt;div class="card"&gt;
+  &lt;h2&gt;Title&lt;/h2&gt;
+  &lt;p&gt;Some text&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;
+  ...
+&lt;/div&gt;</div>
+        </div>
+      </div>
+      <div class="ba-explain"><strong>Fix:</strong> The &lt;p&gt; tag was never closed and the &lt;div class="card"&gt; wasn't closed either — this caused everything below to nest incorrectly inside the card, breaking the entire layout.</div>
+    </div>
+
+    <div class="ba-item">
+      <div class="ba-header">
+        <span class="ba-num">02</span>
+        <span class="ba-title">Mobile layout completely broken — content overflowing</span>
+        <span class="ba-type css">CSS</span>
+      </div>
+      <div class="ba-body">
+        <div class="ba-side before">
+          <div class="ba-label b">Before</div>
+          <div class="ba-code">.container {
+  width: 960px;
+  margin: 0 auto;
+}
+.card {
+  width: 300px;
+  float: left;
+}</div>
+        </div>
+        <div class="ba-side">
+          <div class="ba-label a">After</div>
+          <div class="ba-code after">.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.card {
+  width: 100%;
+  max-width: 300px;
+}</div>
+        </div>
+      </div>
+      <div class="ba-explain"><strong>Fix:</strong> Fixed widths in pixels don't adapt to small screens. Changed to relative units + max-width so the layout works on any screen size.</div>
+    </div>
+
+    <div class="ba-item">
+      <div class="ba-header">
+        <span class="ba-num">03</span>
+        <span class="ba-title">Button click does nothing — event listener not working</span>
+        <span class="ba-type js">JS</span>
+      </div>
+      <div class="ba-body">
+        <div class="ba-side before">
+          <div class="ba-label b">Before</div>
+          <div class="ba-code">document
+  .getElementByid('btn')
+  .addEventListener(
+    'click', sendForm()
+  );</div>
+        </div>
+        <div class="ba-side">
+          <div class="ba-label a">After</div>
+          <div class="ba-code after">document
+  .getElementById('btn')
+  .addEventListener(
+    'click', sendForm
+  );</div>
+        </div>
+      </div>
+      <div class="ba-explain"><strong>Fix:</strong> Two bugs: <strong>getElementById</strong> was misspelled as "getElementByid", and <strong>sendForm()</strong> was being called immediately instead of passing the reference. Classic mistakes that are hard to spot.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TRUST SIGNALS -->
+<section class="section">
+  <div class="sec-tag">Why hire me</div>
+  <h2 class="sec-title">Fast. Clean. Done.</h2>
+  <p class="sec-sub">What you get when you hire me on Fiverr.</p>
+
+  <div class="trust-grid">
+    <div class="trust-item">
+      <span class="trust-icon">⚡</span>
+      <div class="trust-title">Quick Delivery</div>
+      <div class="trust-desc">Most bugs fixed within 24h. I don't leave you waiting.</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🔍</span>
+      <div class="trust-title">Root Cause</div>
+      <div class="trust-desc">I don't just patch — I find why it's broken and fix it properly.</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">💬</span>
+      <div class="trust-title">Clear Explanation</div>
+      <div class="trust-desc">I tell you what was wrong and why, so you understand the fix.</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">📱</span>
+      <div class="trust-title">Responsive Fixes</div>
+      <div class="trust-desc">Every fix is tested on mobile, tablet and desktop.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="sec-tag">Projects</div>
+  <h2 class="sec-title">Things I built</h2>
+  <p class="sec-sub">Tools that show how I think and what I can build from scratch.</p>
+
+  <div class="projects-grid">
+    <div class="proj-card">
+      <div class="proj-num">01 — TOOL</div>
+      <div class="proj-title">CodeFix — Web Debugger</div>
+      <div class="proj-desc">Paste broken HTML, CSS or JavaScript and get instant error detection with explanations. Built entirely from scratch — no libraries.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">HTML</span>
+        <span class="proj-tag">CSS</span>
+        <span class="proj-tag">JavaScript</span>
+        <span class="proj-tag">Parser</span>
+      </div>
+      <a href="./debugger.html" target="_blank" class="proj-link">Open tool →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">02 — APP</div>
+      <div class="proj-title">PixelArt Studio</div>
+      <div class="proj-desc">Full pixel art editor with 7 drawing tools, flood fill, undo/redo and PNG export. Built with Canvas API — zero dependencies.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">HTML</span>
+        <span class="proj-tag">CSS</span>
+        <span class="proj-tag">Canvas API</span>
+        <span class="proj-tag">JS</span>
+      </div>
+      <a href="./pixelart.html" target="_blank" class="proj-link">Open app →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">03 — APP</div>
+      <div class="proj-title">StudyOS</div>
+      <div class="proj-desc">AI-powered study platform with quizzes, XP system, interactive whiteboard and 3 learning modules. Installable as PWA.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">JavaScript</span>
+        <span class="proj-tag">AI API</span>
+        <span class="proj-tag">PWA</span>
+        <span class="proj-tag">Canvas</span>
+      </div>
+      <a href="./studyos.html" target="_blank" class="proj-link">Open app →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <div class="sec-tag">Skills</div>
+  <h2 class="sec-title">What I work with</h2>
+  <br>
+  <div class="skills-wrap">
+    <div>
+      <div class="skill-item"><span class="skill-name">HTML</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-item"><span class="skill-name">CSS</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div><span class="skill-pct">82%</span></div>
+      <div class="skill-item"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div><span class="skill-pct">70%</span></div>
+    </div>
+    <div>
+      <div class="skill-item"><span class="skill-name">Debugging</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90%</span></div>
+      <div class="skill-item"><span class="skill-name">Responsive</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85%</span></div>
+      <div class="skill-item"><span class="skill-name">Dev Tools</span><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div><span class="skill-pct">78%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-eyebrow">Ready to fix your site?</div>
+  <h2 class="contact-h">Your web is broken.<br>I <span class="accent">fix it fast.</span></h2>
+  <p class="contact-sub">Send me your broken code on Fiverr or drop me an email. I'll get back to you quickly.</p>
+  <div class="contact-btns">
+    <a href="https://www.fiverr.com" target="_blank" class="btn-main">⚡ Hire me on Fiverr</a>
+    <a href="mailto:zammbiannnnchi@gmail.com" class="btn-ghost">Send email →</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2025 Álvaro Zambianchi — Web Bug Fixer</span>
+  <span class="footer-by">HTML · CSS · JS</span>
+</footer>
+
+<script>
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Skill bars animate on scroll
+const fills = document.querySelectorAll('.skill-fill');
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.3});
+fills.forEach(f => skillObs.observe(f));
+</script>
+</body>
+</html>
