@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- ERROR 1: Sin viewport meta - se ve mal en móvil -->
+<title>La Trattoria - Restaurante Italiano</title>
+<style>
+/* ERROR 2: Width fija en px - rompe en móvil */
+body {
+  font-family: Arial;
+  margin: 0
+  background: #f5f5f5; /* ERROR 3: Falta ; en margin:0 */
+}
+
+/* ERROR 4: Nav con width fija */
+.navbar {
+  background: #8B0000;
+  width: 960px;
+  padding: 15px;
+  display: block;
+}
+
+.navbar a {
+  color white; /* ERROR 5: Falta : después de color */
+  text-decoration: none;
+  margin-right: 20px;
+  font-size: 16px;
+}
+
+/* ERROR 6: Hero con height fija sin overflow */
+.hero {
+  background: #8B0000;
+  height: 400px;
+  text-align: center;
+  padding-top: 80px;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 48px; /* ERROR 7: Demasiado grande en móvil */
+  font-family: Georgia;
+}
+
+.hero p {
+  color: #ffcccc
+  font-size: 18px; /* ERROR 8: Falta ; */
+}
+
+/* ERROR 9: Container con width fija */
+.container {
+  width: 960px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+/* ERROR 10: Grid roto - float sin clearfix */
+.menu-grid {
+  overflow: hidden;
+}
+
+.menu-card {
+  float: left;
+  width: 300px;
+  margin: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+.menu-card img {
+  width: 300px; /* ERROR 11: Width fija en imagen */
+  height: 200px;
+}
+
+.menu-card h3 {
+  color: #8B0000;
+  font-size 20px; /* ERROR 12: Falta : */
+}
+
+.price {
+  color: #8B0000;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* ERROR 13: Botón con estilos rotos */
+.btn-reservar {
+  background #8B0000; /* ERROR 14: Falta : */
+  color: #fff;
+  padding: 12px 30px;
+  border: none;
+  font-size: 16px;
+  cursur: pointer; /* ERROR 15: Typo en cursor */
+}
+
+.btn-reservar:hover {
+  background: #600000
+}
+
+/* ERROR 16: Section sin clearfix después de floats */
+.about {
+  background: #fff;
+  padding: 60px 0;
+}
+
+.about-content {
+  float: left;
+  width: 500px;
+}
+
+.about-img {
+  float: right;
+  width: 400px;
+}
+
+/* ERROR 17: Footer roto */
+footer {
+  background: #222;
+  color #fff; /* ERROR 18: Falta : */
+  padding: 40px;
+  text-align: center;
+}
+
+footer a {
+  color: #ffcccc;
+}
+
+/* ERROR 19: Formulario sin estilos responsive */
+.reserva-form input {
+  width: 300px;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+}
+
+.reserva-form {
+  width: 700px; /* ERROR 20: Width fija */
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<!-- ERROR 21: Nav sin etiqueta semántica correcta -->
+<div class="navbar">
+  <a href="#">Inicio</a>
+  <a href="#">Menú</a>
+  <a href="#">Reservas</a>
+  <a href="#">Contacto</a>
+  <!-- ERROR 22: Logo sin alt -->
+  <img src="logo.png" style="float:right;height:40px">
+</div>
+
+<!-- ERROR 23: Hero con h1 dentro de div sin rol -->
+<div class="hero">
+  <h1>La Trattoria</h1>
+  <!-- ERROR 24: Párrafo sin cerrar -->
+  <p>Auténtica cocina italiana desde 1985
+  <br>
+  <button class="btn-reservar" onclick="reservar()">Reservar mesa</button>
+</div>
+
+<!-- ERROR 25: Container con width fija -->
+<div class="container">
+  <h2 style="text-align:center; color:#8B0000">Nuestro Menú</h2>
+
+  <div class="menu-grid">
+    <!-- ERROR 26: Cards con float, se rompen en mobile -->
+    <div class="menu-card">
+      <!-- ERROR 27: Imagen sin alt -->
+      <img src="pasta.jpg">
+      <!-- ERROR 28: h3 sin cerrar -->
+      <h3>Pasta Carbonara
+      <p>La receta original romana con guanciale, pecorino y huevo.</p>
+      <span class="price">$1.200</span>
+    </div>
+
+    <div class="menu-card">
+      <img src="pizza.jpg">
+      <!-- ERROR 29: Texto dentro de div sin párrafo -->
+      <h3>Pizza Margherita</h3>
+      Tomate San Marzano, mozzarella fresca y albahaca.
+      <span class="price">$1.100</span>
+    </div>
+
+    <div class="menu-card">
+      <img src="tiramisu.jpg">
+      <h3>Tiramisú</h3>
+      <p>El clásico postre italiano con mascarpone y café.</p>
+      <span class="price">$650</span>
+    <!-- ERROR 30: div sin cerrar -->
+  </div>
+
+</div>
+
+<!-- ABOUT -->
+<!-- ERROR 31: Section sin clearfix -->
+<div class="about">
+  <div class="container">
+    <div class="about-content">
+      <h2 style="color:#8B0000">Nuestra Historia</h2>
+      <p>La Trattoria abrió sus puertas en 1985 en el corazón de Buenos Aires. 
+      Desde entonces hemos servido la mejor cocina italiana auténtica.</p>
+      <!-- ERROR 32: Lista mal formada -->
+      <ul>
+        <li>Ingredientes importados de Italia
+        <li>Chefs con formación en Bolonia
+        <li>Más de 35 años de tradición
+      </ul>
+    </div>
+    <div class="about-img">
+      <!-- ERROR 33: Imagen sin alt y src vacío -->
+      <img src="" style="width:100%;height:300px;background:#ddd">
+    </div>
+  </div>
+<!-- ERROR 34: div.about sin cerrar -->
+
+<!-- RESERVAS -->
+<section id="reservas" style="padding:60px 0;background:#f9f9f9">
+  <div class="container">
+    <h2 style="text-align:center;color:#8B0000">Hacer una Reserva</h2>
+    <!-- ERROR 35: Form sin action ni method -->
+    <form class="reserva-form">
+      <div>
+        <!-- ERROR 36: Input sin label -->
+        <input type="text" placeholder="Tu nombre">
+        <input type="email" placeholder="Email">
+      </div>
+      <div>
+        <input type="date">
+        <!-- ERROR 37: Select mal formado -->
+        <select>
+          <option>1 persona
+          <option>2 personas
+          <option>3-4 personas
+          <option>+5 personas
+        </select>
+      </div>
+      <!-- ERROR 38: Botón de tipo incorrecto -->
+      <button type="button" onclick="enviarReserva()">Confirmar Reserva</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <p>La Trattoria © 2024</p>
+  <p>Av. Corrientes 1234, Buenos Aires</p>
+  <!-- ERROR 39: Tel sin formato correcto -->
+  <p>Tel: 011-4444-5555</p>
+  <a href="#">Facebook</a> | 
+  <a href="#">Instagram</a>
+  <!-- ERROR 40: Footer sin cerrar -->
+</body>
+</html>
+
+<script>
+// ERROR 41: Script fuera del body/head
+function reservar() {
+  // ERROR 42: alert en vez de modal
+  alert('Función de reserva próximamente')
+}
+
+// ERROR 43: Función referenciada pero con nombre diferente
+function enviarReserva() {
+  var nombre = document.getElementByid('nombre').value // ERROR 44: typo + sin ;
+  if(nombre = '') { // ERROR 45: = en vez de ===
+    alert('Ingresa tu nombre')
+  }
+}
+</script>
